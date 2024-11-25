@@ -1,0 +1,26 @@
+import { Module } from '@nestjs/common';
+import {
+  UserCreator,
+  UserDeleter,
+  UserMatcher,
+  UserUpdater,
+} from '../application';
+import { UserRepository } from '../domain';
+import { PostgresUserRepository, User } from './persistence';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [
+    UserCreator,
+    UserUpdater,
+    UserDeleter,
+    UserMatcher,
+    PostgresUserRepository,
+    {
+      provide: UserRepository,
+      useClass: PostgresUserRepository,
+    },
+  ],
+})
+export class UserModule {}
