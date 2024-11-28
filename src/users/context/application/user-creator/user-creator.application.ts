@@ -1,23 +1,30 @@
 import { Injectable } from '@shared/utils';
 import { ApiResponse, Criteria } from '@shared/context';
-import { User, UserPrimitives, UserRepository } from '../../domain';
+import {
+  User,
+  UserAlreadyExistException,
+  UserEmailNotValidException,
+  UserLastNameNotValidException,
+  UserNameNotValidException,
+  UserPasswordNotValidException,
+  UserPrimitives,
+  UserPrimitivesWithoutMetadata,
+  UserRepository,
+} from '../../domain';
+import { errorHanlder } from '@shared/context/exceptions';
 
 @Injectable()
 export class UserCreator {
   constructor(private readonly repository: UserRepository) {}
 
-  async run(data: UserPrimitives): Promise<ApiResponse<UserPrimitives | null>> {
+  async run(
+    data: UserPrimitivesWithoutMetadata,
+  ): Promise<ApiResponse<UserPrimitives | null>> {
     try {
       const criteria = new Criteria({ email: data.email });
       const foundUser = await this.repository.match(criteria);
 
-      if (foundUser.length >= 1) {
-        return {
-          message: 'User already exist',
-          statusCode: 400,
-          data: null,
-        };
-      }
+      if (foundUser.length >= 1) throw new UserAlreadyExistException();
 
       const user = User.create(data).toPrimitives();
       await this.repository.create(user);
@@ -27,12 +34,13 @@ export class UserCreator {
         data: user,
       };
     } catch (error) {
-      console.log(error);
-      return {
-        message: 'Something was wrong',
-        statusCode: 500,
-        data: null,
-      };
+      errorHanlder(error, [
+        UserAlreadyExistException,
+        UserNameNotValidException,
+        UserLastNameNotValidException,
+        UserPasswordNotValidException,
+        UserEmailNotValidException,
+      ]);
     }
   }
 }

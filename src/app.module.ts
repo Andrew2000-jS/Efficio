@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './users/context/infrastructure';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { HealthCheckCtr } from '@shared/app';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     UserModule,
   ],
-  controllers: [],
+  controllers: [HealthCheckCtr],
   providers: [],
 })
 export class AppModule {}

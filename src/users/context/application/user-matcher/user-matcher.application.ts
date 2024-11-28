@@ -10,16 +10,8 @@ export class UserMatcher {
     try {
       const foundUser = await this.repository.match(criteria);
 
-      if (foundUser.length < 0) {
-        return {
-          message: 'User not found!',
-          statusCode: 404,
-          data: [],
-        };
-      }
-
       return {
-        message: 'Found users',
+        message: 'Search results',
         statusCode: 200,
         data: foundUser,
       };

@@ -1,4 +1,5 @@
-import { Exception, ValueObject } from '@shared/context';
+import { ValueObject } from '@shared/context';
+import { UserPasswordNotValidException } from '../exceptions';
 
 export class UserPassword extends ValueObject<string> {
   constructor(value: string) {
@@ -11,23 +12,14 @@ export class UserPassword extends ValueObject<string> {
     const digitRegex = /[0-9]/;
     const specialCharRegex = /[!@$#\-_%^&*()+=[\]{};':"\\|,.<>/?~`]/;
 
-    if (value.length < 8) {
-      throw new Exception(
-        'The password must be at least 8 characters.',
-        'UserPasswordException',
-      );
-    }
+    if (value.length < 8) throw new UserPasswordNotValidException();
 
     if (
       !uppercaseRegex.test(value) ||
       !lowercaseRegex.test(value) ||
       !digitRegex.test(value) ||
       !specialCharRegex.test(value)
-    ) {
-      throw new Exception(
-        'The password must be at least one capital letter, one lowercase letter, one number and an special character (@, $, #, - o _).',
-        'UserPasswordException',
-      );
-    }
+    )
+      throw new UserPasswordNotValidException();
   }
 }

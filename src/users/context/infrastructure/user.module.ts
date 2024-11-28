@@ -8,6 +8,12 @@ import {
 import { UserRepository } from '../domain';
 import { PostgresUserRepository, User } from './persistence';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import {
+  CreateUserCtr,
+  DeleteUserCtr,
+  MatchUserCtr,
+  UpdateUserCtr,
+} from 'src/users/app/controllers';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
@@ -22,5 +28,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useClass: PostgresUserRepository,
     },
   ],
+  controllers: [CreateUserCtr, UpdateUserCtr, DeleteUserCtr, MatchUserCtr],
 })
 export class UserModule {}

@@ -1,6 +1,15 @@
 import { Injectable } from '@shared/utils';
-import { UserPrimitives, UserRepository } from '../../domain';
+import {
+  UserEmailNotValidException,
+  UserLastNameNotValidException,
+  UserNameNotValidException,
+  UserNotFoundException,
+  UserPasswordNotValidException,
+  UserPrimitives,
+  UserRepository,
+} from '../../domain';
 import { ApiResponse, Criteria } from '@shared/context';
+import { errorHanlder } from '@shared/context/exceptions';
 
 @Injectable()
 export class UserUpdater {
@@ -14,21 +23,22 @@ export class UserUpdater {
       const criteria = new Criteria({ id });
       const foundUser = await this.repository.match(criteria);
 
-      if (foundUser.length < 1) {
-        return {
-          message: 'User not found',
-          statusCode: 404,
-          data: null,
-        };
-      }
+      if (foundUser.length < 1) throw new UserNotFoundException();
 
       await this.repository.update(id, user);
-    } catch (error) {
       return {
-        message: 'Something was wrong',
-        statusCode: 500,
-        data: null,
+        message: 'User updated successfully',
+        statusCode: 200,
+        data: user,
       };
+    } catch (error) {
+      errorHanlder(error, [
+        UserNotFoundException,
+        UserNameNotValidException,
+        UserLastNameNotValidException,
+        UserPasswordNotValidException,
+        UserEmailNotValidException,
+      ]);
     }
   }
 }

@@ -1,4 +1,5 @@
-import { Exception, ValueObject } from '@shared/context';
+import { ValueObject } from '@shared/context';
+import { UserEmailNotValidException } from '../exceptions';
 
 export class UserEmail extends ValueObject<string> {
   constructor(value: string) {
@@ -9,11 +10,6 @@ export class UserEmail extends ValueObject<string> {
   private ensureUserEmailIsValid(value: string): void {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!emailRegex.test(value)) {
-      throw new Exception(
-        `Email address ${value} is invalid!`,
-        'UserEmailException',
-      );
-    }
+    if (!emailRegex.test(value)) throw new UserEmailNotValidException();
   }
 }

@@ -19,6 +19,11 @@ export interface UserPrimitives {
   updatedAt: Date;
 }
 
+export type UserPrimitivesWithoutMetadata = Omit<
+  UserPrimitives,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+
 export class User {
   constructor(
     private readonly id: UserId,
@@ -31,16 +36,16 @@ export class User {
     private readonly updatedAt: UpdatedAt,
   ) {}
 
-  static create(data: UserPrimitives): User {
+  static create(data: UserPrimitivesWithoutMetadata): User {
     return new User(
-      new UserId(data.id),
+      UserId.generate(),
       new UserName(data.name),
       new UserLastName(data.lastName),
       new UserEmail(data.email),
       new UserPassword(data.password),
       new UserBirthday(data.birthday),
-      new CreatedAt(data.createdAt),
-      new UpdatedAt(data.updatedAt),
+      new CreatedAt(new Date()),
+      new UpdatedAt(new Date()),
     );
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@shared/utils';
-import { UserRepository } from '../../domain';
+import { UserNotFoundException, UserRepository } from '../../domain';
 import { ApiResponse, Criteria } from '@shared/context';
+import { errorHanlder } from '@shared/context/exceptions';
 
 @Injectable()
 export class UserDeleter {
@@ -11,13 +12,8 @@ export class UserDeleter {
       const criteria = new Criteria({ id });
       const foundUser = await this.repository.match(criteria);
 
-      if (foundUser.length < 1) {
-        return {
-          message: 'User not found!',
-          statusCode: 404,
-          data: null,
-        };
-      }
+      if (foundUser.length < 1) throw new UserNotFoundException();
+
       await this.repository.delete(id);
       return {
         message: 'User deleted successfully',
@@ -25,12 +21,7 @@ export class UserDeleter {
         data: null,
       };
     } catch (error) {
-      console.log(error);
-      return {
-        message: 'Something was wrong',
-        statusCode: 500,
-        data: null,
-      };
+      errorHanlder(error, [UserNotFoundException]);
     }
   }
 }

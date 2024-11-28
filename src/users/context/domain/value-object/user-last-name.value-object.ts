@@ -1,4 +1,5 @@
-import { Exception, ValueObject } from '@shared/context';
+import { ValueObject } from '@shared/context';
+import { UserLastNameNotValidException } from '../exceptions';
 
 export class UserLastName extends ValueObject<string> {
   constructor(value: string) {
@@ -10,25 +11,11 @@ export class UserLastName extends ValueObject<string> {
     const hasNumbers = /.*\d.*/;
     const specialChars = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
 
-    if (value.length > 30) {
-      throw new Exception(
-        `The last name: ${value} has more than 30 characters`,
-        'UserLastNameException',
-      );
-    }
+    if (value.length > 30) throw new UserLastNameNotValidException();
 
-    if (value.length < 3) {
-      throw new Exception(
-        `The last name: ${value} has less then 3 characters`,
-        'UserLastNameException',
-      );
-    }
+    if (value.length < 3) throw new UserLastNameNotValidException();
 
-    if (specialChars.test(value) || hasNumbers.test(value)) {
-      throw new Exception(
-        `The last name: ${value} can't contain invalid characters`,
-        'UserLastNameException',
-      );
-    }
+    if (specialChars.test(value) || hasNumbers.test(value))
+      throw new UserLastNameNotValidException();
   }
 }

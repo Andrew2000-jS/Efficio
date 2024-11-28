@@ -6,7 +6,7 @@ export class Uuid extends ValueObject<string> {
     super(value);
   }
 
-  static random(): Uuid {
+  static generate(): Uuid {
     return new Uuid(uuid());
   }
 }
