@@ -1,9 +1,12 @@
-import { ValueObject } from '@shared/context';
 import { UserPasswordNotValidException } from '../exceptions';
+import { compare, hash } from '@shared/utils';
 
-export class UserPassword extends ValueObject<string> {
+export class UserPassword {
+  private value: string;
+
   constructor(value: string) {
-    super(value);
+    this.ensurePasswordIsValid(value);
+    this.value = this.hashPassword(value);
   }
 
   private ensurePasswordIsValid(value: string): void {
@@ -21,5 +24,20 @@ export class UserPassword extends ValueObject<string> {
       !specialCharRegex.test(value)
     )
       throw new UserPasswordNotValidException();
+  }
+
+  hashPassword(password: string): string {
+    return hash(password);
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+
+  static comparePassword(
+    plainPassword: string,
+    hashedPassword: string,
+  ): boolean {
+    return compare(plainPassword, hashedPassword);
   }
 }

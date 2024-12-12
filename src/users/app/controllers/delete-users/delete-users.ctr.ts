@@ -6,17 +6,19 @@ import {
   Param,
 } from '@nestjs/common';
 import { USER_APP_CONSTANTS } from '../../shared';
-import { UserDeleter } from 'src/users/context/application';
 import { UserErrorHanlder } from '../../shared/decorators';
+import { DeleteUserCommandHandler } from 'src/users/context/application';
 
 @Controller(USER_APP_CONSTANTS.URL_PREFIX)
 export class DeleteUserCtr {
-  constructor(private readonly userDeleter: UserDeleter) {}
+  constructor(
+    private readonly deleteUserCommandHandler: DeleteUserCommandHandler,
+  ) {}
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UserErrorHanlder()
   async run(@Param('id') id: string) {
-    return await this.userDeleter.run(id);
+    return await this.deleteUserCommandHandler.execute({ id });
   }
 }

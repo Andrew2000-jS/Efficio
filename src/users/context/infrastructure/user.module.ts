@@ -1,10 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  UserCreator,
-  UserDeleter,
-  UserMatcher,
-  UserUpdater,
-} from '../application';
+import { EventBus } from '@nestjs/cqrs';
 import { UserRepository } from '../domain';
 import { PostgresUserRepository, User } from './persistence';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,14 +9,30 @@ import {
   MatchUserCtr,
   UpdateUserCtr,
 } from 'src/users/app/controllers';
+import { CqrsModule } from '@nestjs/cqrs';
+import {
+  CreateUserCommandHanlder,
+  UpdateUserCommandHandler,
+  DeleteUserCommandHandler,
+  UserMatcherQueryHandler,
+  UserCreator,
+  UserUpdater,
+  UserDeleter,
+  UserMatcher,
+} from '../application';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([User])],
   providers: [
+    EventBus,
     UserCreator,
     UserUpdater,
     UserDeleter,
     UserMatcher,
+    CreateUserCommandHanlder,
+    UpdateUserCommandHandler,
+    DeleteUserCommandHandler,
+    UserMatcherQueryHandler,
     PostgresUserRepository,
     {
       provide: UserRepository,

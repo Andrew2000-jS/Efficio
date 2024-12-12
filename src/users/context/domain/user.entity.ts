@@ -1,4 +1,4 @@
-import { CreatedAt, UpdatedAt } from '@shared/context';
+import { AggregateRoot, CreatedAt, UpdatedAt } from '@shared/context';
 import {
   UserBirthday,
   UserEmail,
@@ -24,7 +24,7 @@ export type UserPrimitivesWithoutMetadata = Omit<
   'id' | 'createdAt' | 'updatedAt'
 >;
 
-export class User {
+export class User extends AggregateRoot {
   constructor(
     private readonly id: UserId,
     private readonly name: UserName,
@@ -34,7 +34,9 @@ export class User {
     private readonly birthday: UserBirthday,
     private readonly createdAt: CreatedAt,
     private readonly updatedAt: UpdatedAt,
-  ) {}
+  ) {
+    super();
+  }
 
   static create(data: UserPrimitivesWithoutMetadata): User {
     return new User(
@@ -59,6 +61,22 @@ export class User {
       new UserBirthday(plainData.birthday),
       new CreatedAt(plainData.createdAt),
       new UpdatedAt(plainData.updatedAt),
+    );
+  }
+
+  static fromPatialPrimitives(
+    plainData: Partial<UserPrimitives>,
+    crrData: UserPrimitives,
+  ): User {
+    return new User(
+      new UserId(plainData.id ?? crrData.id),
+      new UserName(plainData.name ?? crrData.name),
+      new UserLastName(plainData.lastName ?? crrData.lastName),
+      new UserEmail(plainData.email ?? crrData.email),
+      new UserPassword(plainData.password ?? crrData.password),
+      new UserBirthday(plainData.birthday ?? crrData.birthday),
+      new CreatedAt(plainData.createdAt ?? crrData.createdAt),
+      new UpdatedAt(plainData.updatedAt ?? crrData.updatedAt),
     );
   }
 

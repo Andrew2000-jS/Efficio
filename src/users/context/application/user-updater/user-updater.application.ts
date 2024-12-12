@@ -1,5 +1,6 @@
 import { Injectable } from '@shared/utils';
 import {
+  User,
   UserEmailNotValidException,
   UserLastNameNotValidException,
   UserNameNotValidException,
@@ -7,13 +8,17 @@ import {
   UserPasswordNotValidException,
   UserPrimitives,
   UserRepository,
+  UserUpdated,
 } from '../../domain';
-import { ApiResponse, Criteria } from '@shared/context';
-import { errorHanlder } from '@shared/context/exceptions';
+import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
+import { EventBus } from '@nestjs/cqrs';
 
 @Injectable()
 export class UserUpdater {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly eventBus: EventBus,
+  ) {}
 
   async run(
     id: string,
@@ -25,11 +30,30 @@ export class UserUpdater {
 
       if (foundUser.length < 1) throw new UserNotFoundException();
 
-      await this.repository.update(id, user);
+      const updatedUser = User.fromPatialPrimitives(
+        user,
+        foundUser[0],
+      ).toPrimitives();
+
+      await this.eventBus.publish(
+        new UserUpdated(
+          id,
+          updatedUser.name,
+          updatedUser.lastName,
+          updatedUser.email,
+          updatedUser.password,
+          updatedUser.birthday,
+          new Date(),
+        ),
+      );
+      await this.repository.update(id, {
+        ...updatedUser,
+        updatedAt: new Date(),
+      });
       return {
         message: 'User updated successfully',
         statusCode: 200,
-        data: user,
+        data: updatedUser,
       };
     } catch (error) {
       errorHanlder(error, [

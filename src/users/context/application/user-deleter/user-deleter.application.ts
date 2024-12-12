@@ -1,11 +1,15 @@
 import { Injectable } from '@shared/utils';
 import { UserNotFoundException, UserRepository } from '../../domain';
-import { ApiResponse, Criteria } from '@shared/context';
-import { errorHanlder } from '@shared/context/exceptions';
+import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
+import { UserDeletedEvent } from '../../domain/events';
+import { EventBus } from '@nestjs/cqrs';
 
 @Injectable()
 export class UserDeleter {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly eventBus: EventBus,
+  ) {}
 
   async run(id: string): Promise<ApiResponse<null>> {
     try {
@@ -14,6 +18,7 @@ export class UserDeleter {
 
       if (foundUser.length < 1) throw new UserNotFoundException();
 
+      await this.eventBus.publish(new UserDeletedEvent(id));
       await this.repository.delete(id);
       return {
         message: 'User deleted successfully',

@@ -1,8 +1,9 @@
 import { Injectable } from '@shared/utils';
-import { ApiResponse, Criteria } from '@shared/context';
+import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import {
   User,
   UserAlreadyExistException,
+  UserCreatedEvent,
   UserEmailNotValidException,
   UserLastNameNotValidException,
   UserNameNotValidException,
@@ -11,11 +12,14 @@ import {
   UserPrimitivesWithoutMetadata,
   UserRepository,
 } from '../../domain';
-import { errorHanlder } from '@shared/context/exceptions';
+import { EventBus } from '@nestjs/cqrs';
 
 @Injectable()
 export class UserCreator {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly eventBus: EventBus,
+  ) {}
 
   async run(
     data: UserPrimitivesWithoutMetadata,
@@ -28,6 +32,18 @@ export class UserCreator {
 
       const user = User.create(data).toPrimitives();
       await this.repository.create(user);
+      await this.eventBus.publish(
+        new UserCreatedEvent(
+          user.id,
+          user.name,
+          user.lastName,
+          user.email,
+          user.password,
+          user.birthday,
+          user.createdAt,
+          user.updatedAt,
+        ),
+      );
       return {
         message: 'User created successfully',
         statusCode: 201,

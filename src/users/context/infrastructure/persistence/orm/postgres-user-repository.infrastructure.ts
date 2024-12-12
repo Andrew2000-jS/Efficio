@@ -4,7 +4,7 @@ import { Criteria } from '@shared/context';
 import { Injectable } from '@shared/utils';
 import { User, UserPrimitives, UserRepository } from 'src/users/context/domain';
 import { User as UserEntity } from './entities';
-import { CriteriaTypeormConverter } from '@shared/context/criteria';
+import { CriteriaTypeormConverter } from '@shared/context';
 
 @Injectable()
 export class PostgresUserRepository extends UserRepository {
@@ -27,9 +27,9 @@ export class PostgresUserRepository extends UserRepository {
     await this.repository.delete(id);
   }
 
-  async match(criteria: Criteria): Promise<User[]> {
+  async match(criteria: Criteria): Promise<UserPrimitives[]> {
     const converter = CriteriaTypeormConverter.convert(criteria);
     const foundUsers = await this.repository.find(converter);
-    return foundUsers.map((u) => User.fromPrimitives(u));
+    return foundUsers;
   }
 }
