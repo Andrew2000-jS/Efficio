@@ -14,15 +14,16 @@ import {
   CreateUserCommandHanlder,
   UpdateUserCommandHandler,
   DeleteUserCommandHandler,
-  UserMatcherQueryHandler,
+  MatcheUserQueryHandler,
   UserCreator,
   UserUpdater,
   UserDeleter,
   UserMatcher,
 } from '../application';
+import { NotificationModule } from '@shared/modules';
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([User])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([User]), NotificationModule],
   providers: [
     EventBus,
     UserCreator,
@@ -32,7 +33,7 @@ import {
     CreateUserCommandHanlder,
     UpdateUserCommandHandler,
     DeleteUserCommandHandler,
-    UserMatcherQueryHandler,
+    MatcheUserQueryHandler,
     PostgresUserRepository,
     {
       provide: UserRepository,

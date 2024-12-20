@@ -16,7 +16,7 @@ export class DeleteUserCtr {
   ) {}
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @UserErrorHanlder()
   async run(@Param('id') id: string) {
     return await this.deleteUserCommandHandler.execute({ id });

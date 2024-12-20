@@ -1,5 +1,6 @@
 import { ValueObject } from '@shared/context';
 import { AuthNotValidException } from '../exceptions';
+import { compare } from '@shared/utils';
 
 export class AuthPassword extends ValueObject<string> {
   constructor(value: string) {
@@ -22,5 +23,12 @@ export class AuthPassword extends ValueObject<string> {
       !specialCharRegex.test(value)
     )
       throw new AuthNotValidException();
+  }
+
+  static comparePassword(
+    plainPassword: string,
+    hashedPassword: string,
+  ): boolean {
+    return compare(plainPassword, hashedPassword);
   }
 }

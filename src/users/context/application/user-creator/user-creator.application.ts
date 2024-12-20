@@ -1,9 +1,13 @@
 import { Injectable } from '@shared/utils';
-import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
+import {
+  ApiResponse,
+  Criteria,
+  errorHanlder,
+  UserCreatedEvent,
+} from '@shared/context';
 import {
   User,
   UserAlreadyExistException,
-  UserCreatedEvent,
   UserEmailNotValidException,
   UserLastNameNotValidException,
   UserNameNotValidException,
@@ -13,11 +17,13 @@ import {
   UserRepository,
 } from '../../domain';
 import { EventBus } from '@nestjs/cqrs';
+import { SendEmail } from '@shared/modules/notification/application';
 
 @Injectable()
 export class UserCreator {
   constructor(
     private readonly repository: UserRepository,
+    private readonly sendEmail: SendEmail,
     private readonly eventBus: EventBus,
   ) {}
 
@@ -35,6 +41,7 @@ export class UserCreator {
       await this.eventBus.publish(
         new UserCreatedEvent(
           user.id,
+          user.id,
           user.name,
           user.lastName,
           user.email,
@@ -44,6 +51,14 @@ export class UserCreator {
           user.updatedAt,
         ),
       );
+
+      await this.sendEmail.run(
+        process.env.EMAIL_USERNAME,
+        user.email,
+        'User Created Successfully',
+        `Hi ${user.name}, welcome to our platform! We're glad to have you here.`,
+      );
+
       return {
         message: 'User created successfully',
         statusCode: 201,

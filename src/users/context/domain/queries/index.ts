@@ -1,1 +1,1 @@
-export * from './user-matcher.query';
+export * from './match-user.query';

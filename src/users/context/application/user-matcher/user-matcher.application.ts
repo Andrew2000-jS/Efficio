@@ -1,24 +1,14 @@
 import { Injectable } from '@shared/utils';
-import {
-  User,
-  UserMatched,
-  UserPrimitives,
-  UserRepository,
-} from '../../domain';
+import { UserPrimitives, UserRepository } from '../../domain';
 import { ApiResponse, Criteria } from '@shared/context';
-import { EventBus } from '@nestjs/cqrs';
 
 @Injectable()
 export class UserMatcher {
-  constructor(
-    private readonly repository: UserRepository,
-    private readonly eventBus: EventBus,
-  ) {}
+  constructor(private readonly repository: UserRepository) {}
 
-  async run(criteria: Criteria): Promise<ApiResponse<UserPrimitives[] | []>> {
+  async run(criteria: Criteria): Promise<ApiResponse<UserPrimitives[]>> {
     try {
       const foundUser = await this.repository.match(criteria);
-      await this.eventBus.publish(new UserMatched(criteria));
       return {
         message: 'Search results',
         statusCode: 200,

@@ -1,6 +1,6 @@
 import { Event } from '@shared/context';
 
-export class UserUpdated implements Event {
+export class UserUpdatedEvent implements Event {
   constructor(
     public readonly id,
     public readonly name,

@@ -3,6 +3,7 @@ import { Event } from '@shared/context';
 export class UserCreatedEvent implements Event {
   constructor(
     public readonly id: string,
+    public readonly userId: string,
     public readonly name: string,
     public readonly lastName: string,
     public readonly email: string,

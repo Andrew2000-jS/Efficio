@@ -8,9 +8,13 @@ import {
   UserPasswordNotValidException,
   UserPrimitives,
   UserRepository,
-  UserUpdated,
 } from '../../domain';
-import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
+import {
+  ApiResponse,
+  Criteria,
+  errorHanlder,
+  UserUpdatedEvent,
+} from '@shared/context';
 import { EventBus } from '@nestjs/cqrs';
 
 @Injectable()
@@ -36,7 +40,7 @@ export class UserUpdater {
       ).toPrimitives();
 
       await this.eventBus.publish(
-        new UserUpdated(
+        new UserUpdatedEvent(
           id,
           updatedUser.name,
           updatedUser.lastName,
