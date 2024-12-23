@@ -1,0 +1,38 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Criteria, CriteriaTypeormConverter } from '@shared/context';
+import { Injectable } from '@shared/utils';
+import {
+  AuthPrimitivesWithoutMetadata,
+  AuthPrimitives,
+  Auth,
+} from 'src/auth/context/domain/auth.entity';
+import { AuthRepository } from 'src/auth/context/domain/auth.repository';
+import { Repository } from 'typeorm';
+import { Auth as AuthEntity } from './entities';
+
+@Injectable()
+export class PostgresAuthRepository extends AuthRepository {
+  constructor(
+    @InjectRepository(Auth) private readonly repository: Repository<AuthEntity>,
+  ) {
+    super();
+  }
+
+  async create(auth: AuthPrimitivesWithoutMetadata): Promise<void> {
+    const newAuth = await this.repository.create(auth);
+    await this.repository.save(newAuth);
+  }
+  async delete(userId: string): Promise<void> {
+    await this.repository.delete(userId);
+  }
+
+  async update(userId: string, auth: Partial<AuthPrimitives>): Promise<void> {
+    await this.repository.update(userId, auth);
+  }
+
+  async match(criteria: Criteria): Promise<AuthPrimitives[]> {
+    const converter = CriteriaTypeormConverter.convert(criteria);
+    const foundAuths = await this.repository.find(converter);
+    return foundAuths;
+  }
+}

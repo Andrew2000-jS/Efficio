@@ -24,8 +24,8 @@ export class AuthCreator {
       await this.sendEmail.run(
         process.env.EMAIL_USERNAME,
         newAuth.email,
-        'User Created Successfully',
-        `Hi ${newAuth.email}, welcome to our platform! We're glad to have you here.`,
+        'Auth Created Successfully',
+        `Hi ${newAuth.email}, welcome back to our platform! We're glad to have you here.`,
       );
       return {
         message: 'Authentication record created successfully.',

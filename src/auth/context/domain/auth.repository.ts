@@ -5,8 +5,5 @@ export abstract class AuthRepository {
   abstract create(auth: AuthPrimitivesWithoutMetadata): Promise<void>;
   abstract delete(userId: string): Promise<void>;
   abstract update(userId: string, auth: Partial<AuthPrimitives>): Promise<void>;
-  abstract logIn(email: string, password: string): Promise<void>;
-  abstract logOut(id: string): Promise<void>;
-  abstract recover(email: string, password: string): Promise<void>;
-  abstract match(criteria: Criteria): Promise<AuthPrimitives[] | []>;
+  abstract match(criteria: Criteria): Promise<AuthPrimitives[]>;
 }

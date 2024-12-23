@@ -2,6 +2,7 @@ import { AggregateRoot, CreatedAt, UpdatedAt } from '@shared/context';
 import {
   AuthEmail,
   AuthId,
+  AuthOtp,
   AuthPassword,
   AuthToken,
   AuthUserId,
@@ -13,6 +14,7 @@ export interface AuthPrimitives {
   email: string;
   password: string;
   token: string | null;
+  otpCode: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +31,7 @@ export class Auth extends AggregateRoot {
     private readonly email: AuthEmail,
     private readonly password: AuthPassword,
     private readonly token: AuthToken,
+    private readonly otpCode: AuthOtp,
     private readonly createdAt: CreatedAt,
     private readonly updatedAt: UpdatedAt,
   ) {
@@ -42,6 +45,7 @@ export class Auth extends AggregateRoot {
       new AuthEmail(plainData.email),
       new AuthPassword(plainData.password),
       new AuthToken(plainData.token),
+      new AuthOtp(null),
       new CreatedAt(new Date()),
       new UpdatedAt(new Date()),
     );
@@ -54,6 +58,7 @@ export class Auth extends AggregateRoot {
       new AuthEmail(plainData.email),
       new AuthPassword(plainData.password),
       new AuthToken(plainData.token),
+      new AuthOtp(plainData.otpCode),
       new CreatedAt(plainData.createdAt),
       new UpdatedAt(plainData.updatedAt),
     );
@@ -66,6 +71,7 @@ export class Auth extends AggregateRoot {
       email: this.email.getValue(),
       password: this.password.getValue(),
       token: this.token.getValue(),
+      otpCode: this.otpCode.getValue(),
       createdAt: this.createdAt.getValue(),
       updatedAt: this.updatedAt.getValue(),
     };

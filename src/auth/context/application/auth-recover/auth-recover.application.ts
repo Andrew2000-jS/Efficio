@@ -3,15 +3,12 @@ import { AuthRepository } from '../../domain/auth.repository';
 import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import { AuthNotFoundException } from '../../domain/exceptions';
 import { SendEmail } from '@shared/modules';
-import { EventBus } from '@nestjs/cqrs';
-import { OtpCreatedEvent } from '@shared/context/domain/events';
 
 @Injectable()
 export class AuthRecover {
   constructor(
     private readonly repository: AuthRepository,
     private readonly sendEmail: SendEmail,
-    private readonly eventBus: EventBus,
   ) {}
 
   async run(email: string): Promise<ApiResponse<null>> {
@@ -21,7 +18,7 @@ export class AuthRecover {
 
       if (!foundAuth) throw new AuthNotFoundException();
       const otp = generateOTP(4);
-
+      await this.repository.update(foundAuth.id, { otpCode: otp });
       await this.sendEmail.run(
         process.env.EMAIL_USERNAME,
         email,
@@ -35,7 +32,6 @@ export class AuthRecover {
       Best regards`,
       );
 
-      await this.eventBus.publish(new OtpCreatedEvent(email, otp));
       return {
         message:
           'The verification code has been sent to your email. Please check your inbox.',

@@ -4,7 +4,7 @@ import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import { AuthNotFoundException } from '../../domain/exceptions';
 
 @Injectable()
-export class LogOut {
+export class AuthLogOut {
   constructor(private readonly repository: AuthRepository) {}
 
   async run(id: string): Promise<ApiResponse<null>> {

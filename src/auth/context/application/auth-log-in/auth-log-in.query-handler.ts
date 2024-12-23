@@ -5,10 +5,10 @@ import { AuthLogIn } from './auth-log-in.application';
 
 @Injectable()
 @QueryHandler(LoginQuery)
-export class AuthLoginQueryHandler implements IQueryHandler<LoginQuery> {
+export class LoginQueryHandler implements IQueryHandler<LoginQuery> {
   constructor(private readonly login: AuthLogIn) {}
 
-  async execute({ email, password }: LoginQuery): Promise<any> {
-    return await this.login.run(email, password);
+  async execute({ email, password, ctx }: LoginQuery): Promise<any> {
+    return await this.login.run(email, password, ctx);
   }
 }

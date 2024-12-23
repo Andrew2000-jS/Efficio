@@ -1,7 +1,9 @@
 import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
 import { LogInStrategy } from './interfaces';
 import { InvalidContextException } from './invalid-context.exception';
+import { Injectable } from '@shared/utils';
 
+@Injectable()
 export class LogInContext {
   constructor(private context?: LogInStrategy) {}
 

@@ -19,6 +19,7 @@ export class CreatedAuthListener implements IEventHandler<UserCreatedEvent> {
       email: event.email,
       password: event.password,
       token: null,
+      otpCode: null,
     };
   }
 }

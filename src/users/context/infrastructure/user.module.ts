@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import { UserRepository } from '../domain';
 import { PostgresUserRepository, User } from './persistence';
@@ -21,6 +21,7 @@ import {
   UserMatcher,
 } from '../application';
 import { NotificationModule } from '@shared/modules';
+import { AuthenticationMiddleware } from 'src/users/app/shared/middlewares';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([User]), NotificationModule],
@@ -42,4 +43,10 @@ import { NotificationModule } from '@shared/modules';
   ],
   controllers: [CreateUserCtr, UpdateUserCtr, DeleteUserCtr, MatchUserCtr],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthenticationMiddleware)
+      .forRoutes(UpdateUserCtr, DeleteUserCtr);
+  }
+}

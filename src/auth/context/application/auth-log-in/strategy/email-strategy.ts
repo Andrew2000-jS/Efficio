@@ -3,12 +3,11 @@ import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
 import { IEmailStrategy } from './interfaces';
 import { AuthUnauthorized } from 'src/auth/context/domain/exceptions';
 import { SendEmail } from '@shared/modules';
-import { EventBus } from '@nestjs/cqrs';
-import { OtpCreatedEvent } from '@shared/context/domain/events';
+import { AuthRepository } from 'src/auth/context/domain/auth.repository';
 
 export class EmailStrategy implements IEmailStrategy {
   private readonly sendEmail: SendEmail;
-  private readonly eventBus: EventBus;
+  private readonly repository: AuthRepository;
 
   async execute(auth: AuthPrimitives): Promise<ApiResponse<null>> {
     try {
@@ -26,7 +25,7 @@ export class EmailStrategy implements IEmailStrategy {
       Best regards,`,
       );
 
-      await this.eventBus.publish(new OtpCreatedEvent(auth.email, otp));
+      await this.repository.update(auth.id, { otpCode: otp });
       return {
         message:
           'The verification code has been sent to your email. Please check your inbox.',

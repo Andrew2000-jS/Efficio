@@ -15,14 +15,12 @@ import { Injectable, verifyToken } from '@shared/utils';
 
 @Injectable()
 export class AuthLogIn {
-  constructor(
-    private readonly repository: AuthRepository,
-    private ctx: string,
-  ) {}
+  constructor(private readonly repository: AuthRepository) {}
 
   async run(
     email: string,
     password: string,
+    ctx: string = 'digest',
   ): Promise<ApiResponse<string | null>> {
     try {
       const criteria = new Criteria({ email });
@@ -37,10 +35,9 @@ export class AuthLogIn {
         };
       }
 
-      if (this.ctx === 'digest')
-        loginCtx.setStrategy(new DigestStrategy(password));
+      if (ctx === 'digest') loginCtx.setStrategy(new DigestStrategy(password));
 
-      if (this.ctx === 'email') loginCtx.setStrategy(new EmailStrategy());
+      if (ctx === 'email') loginCtx.setStrategy(new EmailStrategy());
 
       return loginCtx.execute(foundUser);
     } catch (error) {

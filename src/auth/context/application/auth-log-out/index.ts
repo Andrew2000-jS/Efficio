@@ -1,2 +1,2 @@
-export * from './log-out.application';
-export * from './log-out.query-handler';
+export * from './auth-log-out.application';
+export * from './auth-log-out.query-handler';
