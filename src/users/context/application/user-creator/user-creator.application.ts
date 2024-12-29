@@ -16,7 +16,7 @@ import {
   UserPrimitivesWithoutMetadata,
   UserRepository,
 } from '../../domain';
-import { EventBus } from '@nestjs/cqrs';
+import { EventPublisher } from '@nestjs/cqrs';
 import { SendEmail } from '@shared/modules/notification/application';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class UserCreator {
   constructor(
     private readonly repository: UserRepository,
     private readonly sendEmail: SendEmail,
-    private readonly eventBus: EventBus,
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
   async run(
@@ -36,33 +36,22 @@ export class UserCreator {
 
       if (foundUser.length >= 1) throw new UserAlreadyExistException();
 
-      const user = User.create(data).toPrimitives();
-      await this.repository.create(user);
-      await this.eventBus.publish(
-        new UserCreatedEvent(
-          user.id,
-          user.id,
-          user.name,
-          user.lastName,
-          user.email,
-          user.password,
-          user.birthday,
-          user.createdAt,
-          user.updatedAt,
-        ),
-      );
+      const user = User.create(data);
+      const userPrimitives = user.toPrimitives();
 
+      await this.repository.create(userPrimitives);
+      await this.eventPublisher.mergeObjectContext(user).commit();
       await this.sendEmail.run(
         process.env.EMAIL_USERNAME,
-        user.email,
+        userPrimitives.email,
         'User Created Successfully',
-        `Hi ${user.name}, welcome to our platform! We're glad to have you here.`,
+        `Hi ${userPrimitives.name}, welcome to our platform! We're glad to have you here.`,
       );
 
       return {
         message: 'User created successfully',
         statusCode: 201,
-        data: user,
+        data: userPrimitives,
       };
     } catch (error) {
       errorHanlder(error, [

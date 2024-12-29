@@ -9,7 +9,9 @@ import {
 } from 'src/auth/context/domain/exceptions';
 
 export class DigestStrategy implements IDigestStrategy {
-  private readonly jwtService: JwtService;
+  private readonly jwtService: JwtService = new JwtService({
+    secret: process.env.TOKEN_SECRET,
+  });
 
   constructor(public password: string) {}
 

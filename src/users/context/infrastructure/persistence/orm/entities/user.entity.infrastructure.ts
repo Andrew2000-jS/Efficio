@@ -1,5 +1,6 @@
+import { Auth } from 'src/auth/context/infrastructure';
 import { UserPrimitives } from 'src/users/context/domain';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('users')
 export class User implements UserPrimitives {
@@ -20,6 +21,9 @@ export class User implements UserPrimitives {
 
   @Column({ type: 'date' })
   birthday: Date;
+
+  @OneToOne(() => Auth, (auth) => auth.user, { onDelete: 'CASCADE' })
+  auth: Auth;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

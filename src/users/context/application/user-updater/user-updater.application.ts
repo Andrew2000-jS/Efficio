@@ -15,13 +15,13 @@ import {
   errorHanlder,
   UserUpdatedEvent,
 } from '@shared/context';
-import { EventBus } from '@nestjs/cqrs';
+import { EventPublisher } from '@nestjs/cqrs';
 
 @Injectable()
 export class UserUpdater {
   constructor(
     private readonly repository: UserRepository,
-    private readonly eventBus: EventBus,
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
   async run(
@@ -34,30 +34,33 @@ export class UserUpdater {
 
       if (foundUser.length < 1) throw new UserNotFoundException();
 
-      const updatedUser = User.fromPatialPrimitives(
-        user,
-        foundUser[0],
-      ).toPrimitives();
+      const updatedUser = User.fromPatialPrimitives(user, foundUser[0]);
+      const updatedUserPrimitives = updatedUser.toPrimitives();
 
-      await this.eventBus.publish(
+      updatedUser.apply(
         new UserUpdatedEvent(
           id,
-          updatedUser.name,
-          updatedUser.lastName,
-          updatedUser.email,
-          updatedUser.password,
-          updatedUser.birthday,
+          id,
+          updatedUserPrimitives.name,
+          updatedUserPrimitives.lastName,
+          updatedUserPrimitives.email,
+          updatedUserPrimitives.password,
+          updatedUserPrimitives.birthday,
           new Date(),
         ),
       );
+
       await this.repository.update(id, {
-        ...updatedUser,
+        ...updatedUserPrimitives,
         updatedAt: new Date(),
       });
+
+      await this.eventPublisher.mergeObjectContext(updatedUser).commit();
+
       return {
         message: 'User updated successfully',
         statusCode: 200,
-        data: updatedUser,
+        data: updatedUserPrimitives,
       };
     } catch (error) {
       errorHanlder(error, [

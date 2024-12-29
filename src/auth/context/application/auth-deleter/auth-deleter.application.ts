@@ -9,13 +9,6 @@ export class AuthDeleter {
 
   async run(userId: string): Promise<ApiResponse<null>> {
     try {
-      const criteria = new Criteria({ userId });
-      const foundAuth = await this.repository.match(criteria);
-
-      if (!foundAuth) {
-        throw new AuthNotFoundException();
-      }
-
       await this.repository.delete(userId);
       return {
         message: 'Authentication record deleted successfully.',

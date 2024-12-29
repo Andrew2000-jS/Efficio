@@ -1,4 +1,9 @@
-import { AggregateRoot, CreatedAt, UpdatedAt } from '@shared/context';
+import {
+  AggregateRoot,
+  CreatedAt,
+  UpdatedAt,
+  UserCreatedEvent,
+} from '@shared/context';
 import {
   UserBirthday,
   UserEmail,
@@ -39,7 +44,7 @@ export class User extends AggregateRoot {
   }
 
   static create(data: UserPrimitivesWithoutMetadata): User {
-    return new User(
+    const user = new User(
       UserId.generate(),
       new UserName(data.name),
       new UserLastName(data.lastName),
@@ -49,6 +54,22 @@ export class User extends AggregateRoot {
       new CreatedAt(new Date()),
       new UpdatedAt(new Date()),
     );
+
+    user.apply(
+      new UserCreatedEvent(
+        user.id.getValue(),
+        user.id.getValue(),
+        user.name.getValue(),
+        user.lastName.getValue(),
+        user.email.getValue(),
+        user.password.getValue(),
+        user.birthday.getValue(),
+        user.createdAt.getValue(),
+        user.updatedAt.getValue(),
+      ),
+    );
+
+    return user;
   }
 
   static fromPrimitives(plainData: UserPrimitives): User {

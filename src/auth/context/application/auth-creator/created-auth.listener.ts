@@ -1,7 +1,6 @@
 import { IEventHandler } from '@shared/context';
 import { EventHandler, UserCreatedEvent } from '@shared/context/domain/events';
 import { AuthCreator } from './auth-creator.application';
-import { AuthPrimitivesWithoutMetadata } from '../../domain/auth.entity';
 import { Injectable } from '@shared/utils';
 
 @Injectable()
@@ -13,7 +12,7 @@ export class CreatedAuthListener implements IEventHandler<UserCreatedEvent> {
     return await this.authCreator.run(this.adapter(event));
   }
 
-  private adapter(event: UserCreatedEvent): AuthPrimitivesWithoutMetadata {
+  private adapter(event: UserCreatedEvent) {
     return {
       userId: event.userId,
       email: event.email,

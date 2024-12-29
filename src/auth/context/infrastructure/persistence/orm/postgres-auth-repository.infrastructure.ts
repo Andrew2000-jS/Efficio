@@ -13,21 +13,22 @@ import { Auth as AuthEntity } from './entities';
 @Injectable()
 export class PostgresAuthRepository extends AuthRepository {
   constructor(
-    @InjectRepository(Auth) private readonly repository: Repository<AuthEntity>,
+    @InjectRepository(Auth)
+    private readonly repository: Repository<AuthEntity>,
   ) {
     super();
   }
 
   async create(auth: AuthPrimitivesWithoutMetadata): Promise<void> {
     const newAuth = await this.repository.create(auth);
-    await this.repository.save(newAuth);
+    await this.repository.save({ ...newAuth, user: { id: auth.userId } });
   }
   async delete(userId: string): Promise<void> {
-    await this.repository.delete(userId);
+    await this.repository.delete({ user: { id: userId } });
   }
 
   async update(userId: string, auth: Partial<AuthPrimitives>): Promise<void> {
-    await this.repository.update(userId, auth);
+    await this.repository.update({ user: { id: userId } }, auth);
   }
 
   async match(criteria: Criteria): Promise<AuthPrimitives[]> {

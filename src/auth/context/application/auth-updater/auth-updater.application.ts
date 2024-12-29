@@ -8,14 +8,14 @@ import { AuthPrimitives } from '../../domain/auth.entity';
 export class AuthUpdater {
   constructor(private readonly repository: AuthRepository) {}
 
-  async run(userId: string, data: Partial<AuthPrimitives>) {
+  async run(id: string, updatedData: Partial<AuthPrimitives>) {
     try {
-      const criteria = new Criteria({ userId });
-      const foundAuth = await this.repository.match(criteria)[0];
+      const criteria = new Criteria({ user: { id } });
+      const foundAuth = await this.repository.match(criteria);
 
-      if (!foundAuth) throw new AuthNotFoundException();
+      if (foundAuth.length < 0) throw new AuthNotFoundException();
 
-      await this.repository.update(userId, data);
+      await this.repository.update(id, updatedData);
     } catch (error) {
       errorHanlder(error, [AuthNotFoundException]);
     }

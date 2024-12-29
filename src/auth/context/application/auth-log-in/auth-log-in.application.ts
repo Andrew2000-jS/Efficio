@@ -11,7 +11,7 @@ import {
   InvalidContextException,
   LogInContext,
 } from './strategy';
-import { Injectable, verifyToken } from '@shared/utils';
+import { Injectable } from '@shared/utils';
 
 @Injectable()
 export class AuthLogIn {
@@ -24,14 +24,14 @@ export class AuthLogIn {
   ): Promise<ApiResponse<string | null>> {
     try {
       const criteria = new Criteria({ email });
-      const foundUser = await this.repository.match(criteria)[0];
+      const foundUser = await this.repository.match(criteria);
       const loginCtx = new LogInContext();
 
-      if (foundUser && verifyToken(foundUser.token)) {
+      if (foundUser.length < 1) {
         return {
-          message: 'User authenticated successfully.',
-          statusCode: 200,
-          data: foundUser.token,
+          message: 'Invalid login credentials.',
+          statusCode: 400,
+          data: null,
         };
       }
 
@@ -39,7 +39,10 @@ export class AuthLogIn {
 
       if (ctx === 'email') loginCtx.setStrategy(new EmailStrategy());
 
-      return loginCtx.execute(foundUser);
+      const res = await loginCtx.execute(foundUser[0]);
+      await this.repository.update(foundUser[0].id, { token: res.data });
+
+      return res;
     } catch (error) {
       errorHanlder(error, [
         AuthNotFoundException,

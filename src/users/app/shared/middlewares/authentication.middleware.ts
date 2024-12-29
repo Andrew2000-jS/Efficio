@@ -5,11 +5,13 @@ import { NextFunction, Request, Response } from 'express';
 @Injectable()
 export class AuthenticationMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const token = req.header('Authorization');
+    let token = req.header('Authorization');
 
-    if (!token) {
+    if (!token || !token.startsWith('Bearer ')) {
       return res.status(401).send('Unauthorized');
     }
+
+    token = token.replace('Bearer ', '');
 
     try {
       const payload = verifyToken(token);

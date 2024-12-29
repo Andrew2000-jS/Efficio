@@ -1,12 +1,12 @@
 import { Injectable } from '@shared/utils';
-import { UserNotFoundException, UserRepository } from '../../domain';
+import { User, UserNotFoundException, UserRepository } from '../../domain';
 import {
   ApiResponse,
   Criteria,
   errorHanlder,
   UserDeletedEvent,
 } from '@shared/context';
-import { EventBus } from '@nestjs/cqrs';
+import { EventPublisher } from '@nestjs/cqrs';
 import { SendEmail } from '@shared/modules';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class UserDeleter {
   constructor(
     private readonly repository: UserRepository,
     private readonly sendEmail: SendEmail,
-    private readonly eventBus: EventBus,
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
   async run(id: string): Promise<ApiResponse<null>> {
@@ -24,8 +24,11 @@ export class UserDeleter {
 
       if (foundUser.length < 1) throw new UserNotFoundException();
 
-      await this.eventBus.publish(new UserDeletedEvent(id));
+      const user = User.fromPrimitives(foundUser[0]);
+
+      user.apply(new UserDeletedEvent(id));
       await this.repository.delete(id);
+      await this.eventPublisher.mergeObjectContext(user).commit();
       await this.sendEmail.run(
         process.env.EMAIL_USERNAME,
         foundUser[0].email,
@@ -33,8 +36,8 @@ export class UserDeleter {
         `Hi ${foundUser[0].name}, 
         We want to inform you that your account has been successfully deleted from our platform. If you have any questions or believe this was done in error, please don't hesitate to contact us.
 
-        Best regards,  
-        Test.inc`,
+        Best regards  
+        `,
       );
       return {
         message: 'User deleted successfully',
