@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { LoginQueryHandler } from 'src/auth/context/application';
+import { LoginQueryHandler } from '@auth/context/application';
 import { EmailLoginDto } from './email-log-in.dto';
-import { AUTH_APP_CONSTANTS, AuthErrorHanlder } from 'src/auth/app/shared';
+import { AUTH_APP_CONSTANTS, AuthErrorHanlder } from '@auth/app/shared';
 
 @Controller(AUTH_APP_CONSTANTS.URL_PREFIX)
 export class EmailLoginCtr {

@@ -8,7 +8,7 @@ import {
   DeleteUserCtr,
   MatchUserCtr,
   UpdateUserCtr,
-} from 'src/users/app/controllers';
+} from '@users/app/controllers';
 import { CqrsModule } from '@nestjs/cqrs';
 import {
   CreateUserCommandHanlder,
@@ -21,7 +21,7 @@ import {
   UserMatcher,
 } from '../application';
 import { NotificationModule } from '@shared/modules';
-import { AuthenticationMiddleware } from 'src/users/app/shared/middlewares';
+import { AuthenticationMiddleware } from '@users/app/shared/middlewares';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([User]), NotificationModule],

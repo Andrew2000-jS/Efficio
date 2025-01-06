@@ -1,5 +1,5 @@
 import { IsDate, IsEmail, IsString, IsStrongPassword } from 'class-validator';
-import { UserPrimitivesWithoutMetadata } from 'src/users/context/domain';
+import { UserPrimitivesWithoutMetadata } from '@users/context/domain';
 
 export class CreateUserDto implements UserPrimitivesWithoutMetadata {
   @IsString()

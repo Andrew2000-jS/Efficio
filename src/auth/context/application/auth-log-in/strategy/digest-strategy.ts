@@ -1,12 +1,12 @@
 import { ApiResponse } from '@shared/context';
 import { IDigestStrategy } from './interfaces';
-import { AuthPassword } from 'src/auth/context/domain/value-object';
 import { JwtService } from '@nestjs/jwt';
-import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
 import {
+  AuthPrimitives,
   AuthNotValidException,
   AuthUnauthorized,
-} from 'src/auth/context/domain/exceptions';
+  AuthPassword,
+} from '@auth/context/domain';
 
 export class DigestStrategy implements IDigestStrategy {
   private readonly jwtService: JwtService = new JwtService({

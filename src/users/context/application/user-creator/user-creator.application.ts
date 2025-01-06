@@ -1,10 +1,5 @@
 import { Injectable } from '@shared/utils';
-import {
-  ApiResponse,
-  Criteria,
-  errorHanlder,
-  UserCreatedEvent,
-} from '@shared/context';
+import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import {
   User,
   UserAlreadyExistException,

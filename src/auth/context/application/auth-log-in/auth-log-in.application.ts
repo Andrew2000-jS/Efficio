@@ -1,10 +1,10 @@
-import { AuthRepository } from '../../domain/auth.repository';
 import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import {
   AuthNotFoundException,
   AuthNotValidException,
   AuthUnauthorized,
-} from '../../domain/exceptions';
+  AuthRepository,
+} from '../../domain';
 import {
   DigestStrategy,
   EmailStrategy,

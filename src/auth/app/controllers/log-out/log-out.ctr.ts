@@ -1,6 +1,6 @@
 import { Controller, Param, Post } from '@nestjs/common';
 import { AUTH_APP_CONSTANTS, AuthErrorHanlder } from '../../shared';
-import { LogOutQueryHandler } from 'src/auth/context/application';
+import { LogOutQueryHandler } from '@auth/context/application';
 
 @Controller(AUTH_APP_CONSTANTS.URL_PREFIX)
 export class LogOutCtr {

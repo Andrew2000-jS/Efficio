@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Criteria } from '@shared/context';
 import { Injectable } from '@shared/utils';
-import { User, UserPrimitives, UserRepository } from 'src/users/context/domain';
+import { User, UserPrimitives, UserRepository } from '@users/context/domain';
 import { User as UserEntity } from './entities';
 import { CriteriaTypeormConverter } from '@shared/context';
 

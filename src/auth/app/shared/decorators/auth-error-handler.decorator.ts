@@ -7,7 +7,7 @@ import {
   AuthNotFoundException,
   AuthNotValidException,
   AuthUnauthorized,
-} from 'src/auth/context/domain/exceptions';
+} from '@auth/context/domain';
 
 const errorTypes = [
   AuthNotFoundException,

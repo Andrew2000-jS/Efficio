@@ -1,7 +1,6 @@
-import { AuthRepository } from '../../domain/auth.repository';
-import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
+import { ApiResponse, errorHanlder } from '@shared/context';
 import { Injectable } from '@shared/utils';
-import { AuthNotFoundException } from '../../domain/exceptions';
+import { AuthRepository, AuthNotFoundException } from '../../domain';
 
 @Injectable()
 export class AuthDeleter {

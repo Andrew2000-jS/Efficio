@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AUTH_APP_CONSTANTS } from '../../shared';
-import { OtpQueryHandler } from 'src/auth/context/application';
+import { OtpQueryHandler } from '@auth/context/application';
 import { OtpDto } from './otp.dto';
 
 @Controller(AUTH_APP_CONSTANTS.URL_PREFIX)

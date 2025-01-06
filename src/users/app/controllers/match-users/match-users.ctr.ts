@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { USER_APP_CONSTANTS } from '../../shared';
 import { Criteria } from '@shared/context';
 import { UserErrorHanlder } from '../../shared/decorators';
-import { MatcheUserQueryHandler } from 'src/users/context/application';
+import { MatcheUserQueryHandler } from '@users/context/application';
 
 @Controller(USER_APP_CONSTANTS.URL_PREFIX)
 export class MatchUserCtr {

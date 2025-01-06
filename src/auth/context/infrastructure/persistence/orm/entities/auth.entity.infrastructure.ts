@@ -1,5 +1,5 @@
-import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
-import { User } from 'src/users/context/infrastructure';
+import { AuthPrimitives } from '@auth/context/domain';
+import { User } from '@users/context/infrastructure';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('auth')

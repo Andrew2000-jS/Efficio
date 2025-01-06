@@ -1,9 +1,11 @@
 import { ApiResponse } from '@shared/context';
-import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
+import {
+  AuthPrimitives,
+  AuthRepository,
+  AuthUnauthorized,
+} from '@auth/context/domain';
 import { IEmailStrategy } from './interfaces';
-import { AuthUnauthorized } from 'src/auth/context/domain/exceptions';
 import { SendEmail } from '@shared/modules';
-import { AuthRepository } from 'src/auth/context/domain/auth.repository';
 
 export class EmailStrategy implements IEmailStrategy {
   private readonly sendEmail: SendEmail;

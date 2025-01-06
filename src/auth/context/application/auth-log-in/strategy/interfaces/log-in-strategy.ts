@@ -1,5 +1,5 @@
 import { ApiResponse } from '@shared/context';
-import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
+import { AuthPrimitives } from '@auth/context/domain';
 
 export interface LogInStrategy {
   execute(auth: AuthPrimitives): Promise<ApiResponse<string | null>>;

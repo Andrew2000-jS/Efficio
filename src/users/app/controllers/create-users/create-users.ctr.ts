@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { USER_APP_CONSTANTS } from '../../shared';
 import { CreateUserDto } from './create-users.dto';
 import { UserErrorHanlder } from '../../shared/decorators';
-import { CreateUserCommandHanlder } from 'src/users/context/application';
+import { CreateUserCommandHanlder } from '@users/context/application';
 
 @Controller(USER_APP_CONSTANTS.URL_PREFIX)
 export class CreateUserCtr {

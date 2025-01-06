@@ -6,9 +6,12 @@ import { UserModule } from './users/context/infrastructure';
 import { AuthModule } from './auth/context/infrastructure';
 import { PostgresModule } from '@shared/modules';
 
+const NODE_ENV =
+  process.env.NODE_ENV === 'dev' ? '.env.development' : '.env.test';
+
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: NODE_ENV }),
     JwtModule.register({ secret: process.env.TOKEN_SECRET }),
     PostgresModule,
     AuthModule,

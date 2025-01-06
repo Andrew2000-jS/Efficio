@@ -20,7 +20,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
     } catch (error) {
       return res
         .status(401)
-        .json({ message: 'Token inválido', statusCode: 401, data: null });
+        .json({ message: 'Invalid token', statusCode: 401, data: null });
     }
   }
 }

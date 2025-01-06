@@ -1,9 +1,9 @@
-import { AuthRepository } from '../../domain/auth.repository';
 import {
   Auth,
   AuthPrimitives,
   AuthPrimitivesWithoutMetadata,
-} from '../../domain/auth.entity';
+  AuthRepository,
+} from '../../domain';
 import { ApiResponse, errorHanlder } from '@shared/context';
 import { Injectable } from '@shared/utils';
 

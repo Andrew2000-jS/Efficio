@@ -5,8 +5,8 @@ import {
   AuthPrimitivesWithoutMetadata,
   AuthPrimitives,
   Auth,
-} from 'src/auth/context/domain/auth.entity';
-import { AuthRepository } from 'src/auth/context/domain/auth.repository';
+  AuthRepository,
+} from '@auth/context/domain';
 import { Repository } from 'typeorm';
 import { Auth as AuthEntity } from './entities';
 

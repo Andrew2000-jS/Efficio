@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AUTH_APP_CONSTANTS } from '../../shared';
-import { RecoverAuthQueryHandler } from 'src/auth/context/application';
+import { RecoverAuthQueryHandler } from '@auth/context/application';
 import { RecoverDto } from './recover.dto';
 
 @Controller(AUTH_APP_CONSTANTS.URL_PREFIX)

@@ -28,7 +28,7 @@ import {
   EmailLoginCtr,
   LogOutCtr,
   RecoverCtr,
-} from 'src/auth/app/controllers';
+} from '@auth/app/controllers';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([Auth]), NotificationModule],

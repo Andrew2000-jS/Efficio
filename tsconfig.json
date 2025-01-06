@@ -19,6 +19,9 @@
     "baseUrl": "./",
     "paths": {
       "@shared/*": ["src/shared/*"],
+      "@users/*": ["src/users/*"],
+      "@auth/*": ["src/auth/*"],
+      "@app": ["src/app.module.ts"],
     }
   }
 }

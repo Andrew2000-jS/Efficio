@@ -10,7 +10,7 @@ import {
   UserNameNotValidException,
   UserNotFoundException,
   UserPasswordNotValidException,
-} from 'src/users/context/domain';
+} from '@users/context/domain';
 
 const errorTypes = [
   UserNameNotValidException,

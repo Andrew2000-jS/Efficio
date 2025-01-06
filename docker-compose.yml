@@ -5,7 +5,7 @@ services:
     image: postgres:13-alpine
     restart: always
     env_file:
-      - .env
+      - ${ENV_FILE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -15,7 +15,7 @@ services:
     container_name: pgAdmin
     restart: always
     env_file:
-      - .env
+      - ${ENV_FILE}
     ports:
       - 8080:80
     volumes:

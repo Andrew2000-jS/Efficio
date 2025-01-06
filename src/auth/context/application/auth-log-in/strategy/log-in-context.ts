@@ -1,4 +1,4 @@
-import { AuthPrimitives } from 'src/auth/context/domain/auth.entity';
+import { AuthPrimitives } from '@auth/context/domain';
 import { LogInStrategy } from './interfaces';
 import { InvalidContextException } from './invalid-context.exception';
 import { Injectable } from '@shared/utils';
