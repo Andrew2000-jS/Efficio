@@ -14,11 +14,11 @@ export class AuthRecover {
   async run(email: string): Promise<ApiResponse<null>> {
     try {
       const criteria = new Criteria({ email });
-      const foundAuth = await this.repository.match(criteria)[0];
+      const foundAuth = await this.repository.match(criteria);
 
-      if (!foundAuth) throw new AuthNotFoundException();
+      if (foundAuth.length < 0) throw new AuthNotFoundException();
       const otp = generateOTP(4);
-      await this.repository.update(foundAuth.id, { otpCode: otp });
+      await this.repository.update(foundAuth[0].user.id, { otpCode: otp });
       await this.sendEmail.run(
         process.env.EMAIL_USERNAME,
         email,

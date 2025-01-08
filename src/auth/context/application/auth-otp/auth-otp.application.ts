@@ -16,13 +16,16 @@ export class AuthOtp {
   async run(otp: string, email: string): Promise<ApiResponse<string>> {
     try {
       const criteria = new Criteria({ email });
-      const foundAuth = await this.repository.match(criteria)[0];
+      const foundAuth = await this.repository.match(criteria);
 
-      if (!foundAuth) throw new AuthNotFoundException();
+      if (foundAuth.length < 0) throw new AuthNotFoundException();
 
-      if (foundAuth.otp !== otp) throw new AutOtpNotValidException();
+      if (foundAuth[0].otpCode !== otp) throw new AutOtpNotValidException();
 
-      const payload = { id: foundAuth.id, email: foundAuth.email };
+      const payload = {
+        id: foundAuth[0].user.id,
+        email: foundAuth[0].user.email,
+      };
       const token = this.jwtService.sign(payload);
 
       return {
