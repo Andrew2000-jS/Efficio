@@ -13,10 +13,11 @@ export class AuthCreator {
 
   async run(
     auth: AuthPrimitivesWithoutMetadata,
+    userId: string,
   ): Promise<ApiResponse<AuthPrimitives>> {
     try {
       const newAuth = Auth.create(auth).toPrimitives();
-      await this.repository.create(newAuth);
+      await this.repository.create(newAuth, userId);
 
       return {
         message: 'Authentication record created successfully.',

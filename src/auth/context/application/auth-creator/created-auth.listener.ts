@@ -9,7 +9,7 @@ export class CreatedAuthListener implements IEventHandler<UserCreatedEvent> {
   constructor(private readonly authCreator: AuthCreator) {}
 
   async handle(event: UserCreatedEvent) {
-    return await this.authCreator.run(this.adapter(event));
+    return await this.authCreator.run(this.adapter(event), event.userId);
   }
 
   private adapter(event: UserCreatedEvent) {
@@ -17,6 +17,7 @@ export class CreatedAuthListener implements IEventHandler<UserCreatedEvent> {
       userId: event.userId,
       email: event.email,
       password: event.password,
+      user: {},
       token: null,
       otpCode: null,
     };

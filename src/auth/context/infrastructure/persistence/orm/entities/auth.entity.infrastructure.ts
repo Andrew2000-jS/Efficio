@@ -7,23 +7,15 @@ export class Auth implements AuthPrimitives {
   @PrimaryColumn()
   id: string;
 
-  userId: string;
-
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  password: string;
-
-  @Column({ nullable: true })
-  token: string | null;
+  @OneToOne(() => User, (user) => user.auth, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  user: User;
 
   @Column({ nullable: true })
   otpCode: string | null;
 
-  @OneToOne(() => User, (user) => user.auth, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  user: User;
+  @Column({ nullable: true })
+  token: string | null;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

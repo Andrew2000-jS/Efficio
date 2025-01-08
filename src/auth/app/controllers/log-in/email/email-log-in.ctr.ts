@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { LoginQueryHandler } from '@auth/context/application';
 import { EmailLoginDto } from './email-log-in.dto';
 import { AUTH_APP_CONSTANTS, AuthErrorHanlder } from '@auth/app/shared';
@@ -8,6 +8,7 @@ export class EmailLoginCtr {
   constructor(private readonly loginQueryHandler: LoginQueryHandler) {}
 
   @Post('email')
+  @HttpCode(HttpStatus.OK)
   @AuthErrorHanlder()
   async run(@Body() emailLoginDto: EmailLoginDto) {
     return await this.loginQueryHandler.execute({

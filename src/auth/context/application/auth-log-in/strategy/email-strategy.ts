@@ -16,9 +16,9 @@ export class EmailStrategy implements IEmailStrategy {
       const otp = generateOTP();
       await this.sendEmail.run(
         process.env.EMAIL_USERNAME,
-        auth.email,
+        auth.user.email,
         'Your Verification Code',
-        `Hi ${auth.email},  
+        `Hi ${auth.user.email},  
       
       Here is your one-time verification code: **${otp}**  
       

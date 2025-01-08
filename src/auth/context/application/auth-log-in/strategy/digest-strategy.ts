@@ -5,8 +5,8 @@ import {
   AuthPrimitives,
   AuthNotValidException,
   AuthUnauthorized,
-  AuthPassword,
 } from '@auth/context/domain';
+import { compare } from '@shared/utils';
 
 export class DigestStrategy implements IDigestStrategy {
   private readonly jwtService: JwtService = new JwtService({
@@ -17,16 +17,17 @@ export class DigestStrategy implements IDigestStrategy {
 
   async execute(auth: AuthPrimitives): Promise<ApiResponse<string | null>> {
     try {
-      const isMatchPwd = AuthPassword.comparePassword(
-        this.password,
-        auth.password,
-      );
+      const isMatchPwd = compare(this.password, auth.user.password);
 
       if (!isMatchPwd) {
         throw new AuthNotValidException();
       }
 
-      const payload = { id: auth.id, email: auth.email };
+      const payload = {
+        id: auth.id,
+        email: auth.user.email,
+        userId: auth.user.id,
+      };
       const token = this.jwtService.sign(payload);
 
       return {

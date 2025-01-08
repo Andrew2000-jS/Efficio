@@ -17,7 +17,9 @@
     "test:watch": "NODE_ENV=test jest --watch",
     "test:cov": "NODE_ENV=test jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "NODE_ENV=test jest --watch --config ./test/jest-e2e.json"
+    "test:e2e": "NODE_ENV=test jest --watch --config ./test/jest-e2e.json",
+    "clean-db:dev": "ENV_FILE=.env.test docker-compose down -v && ENV_FILE=.env.development docker-compose up -d",
+    "clean-db:test": "ENV_FILE=.env.development docker-compose down -v && ENV_FILE=.env.test docker-compose up -d"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

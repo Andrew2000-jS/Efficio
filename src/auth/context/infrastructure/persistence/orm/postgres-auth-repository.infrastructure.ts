@@ -19,9 +19,12 @@ export class PostgresAuthRepository extends AuthRepository {
     super();
   }
 
-  async create(auth: AuthPrimitivesWithoutMetadata): Promise<void> {
+  async create(
+    auth: AuthPrimitivesWithoutMetadata,
+    userId: string,
+  ): Promise<void> {
     const newAuth = await this.repository.create(auth);
-    await this.repository.save({ ...newAuth, user: { id: auth.userId } });
+    await this.repository.save({ ...newAuth, user: { id: userId } });
   }
   async delete(userId: string): Promise<void> {
     await this.repository.delete({ user: { id: userId } });
@@ -33,7 +36,10 @@ export class PostgresAuthRepository extends AuthRepository {
 
   async match(criteria: Criteria): Promise<AuthPrimitives[]> {
     const converter = CriteriaTypeormConverter.convert(criteria);
-    const foundAuths = await this.repository.find(converter);
+    const foundAuths = await this.repository.find({
+      where: converter.where,
+      relations: ['user'],
+    });
     return foundAuths;
   }
 }

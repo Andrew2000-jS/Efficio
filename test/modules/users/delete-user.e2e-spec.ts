@@ -1,8 +1,7 @@
 import { TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { testModule, usePipes, E2EConfigurations } from '../shared';
-import { mockUser } from './users.mock';
+import { testModule, usePipes, E2EConfigurations, mockUser } from '../shared';
 
 const configuration = new E2EConfigurations();
 

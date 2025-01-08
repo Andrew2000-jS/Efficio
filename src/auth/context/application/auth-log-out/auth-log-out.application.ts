@@ -9,12 +9,12 @@ export class AuthLogOut {
 
   async run(id: string): Promise<ApiResponse<null>> {
     try {
-      const criteria = new Criteria({ id });
-      const foundUser = await this.repository.match(criteria)[0];
+      const criteria = new Criteria({ user: { id } });
+      const foundUser = await this.repository.match(criteria);
 
-      if (!foundUser) throw new AuthNotFoundException();
+      if (foundUser.length < 1) throw new AuthNotFoundException();
 
-      await this.repository.update(foundUser.userId, { token: null });
+      await this.repository.update(foundUser[0].user.id, { token: null });
 
       return {
         message: 'Log out successfully',

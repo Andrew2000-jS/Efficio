@@ -23,7 +23,7 @@ export class AuthLogIn {
     ctx: string = 'digest',
   ): Promise<ApiResponse<string | null>> {
     try {
-      const criteria = new Criteria({ email });
+      const criteria = new Criteria({ user: { email } });
       const foundUser = await this.repository.match(criteria);
       const loginCtx = new LogInContext();
 
@@ -40,7 +40,10 @@ export class AuthLogIn {
       if (ctx === 'email') loginCtx.setStrategy(new EmailStrategy());
 
       const res = await loginCtx.execute(foundUser[0]);
-      await this.repository.update(foundUser[0].id, { token: res.data });
+
+      await this.repository.update(foundUser[0].user.id, {
+        token: res.data,
+      });
 
       return res;
     } catch (error) {

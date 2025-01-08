@@ -8,7 +8,7 @@ import {
   userWithInvalidLastName,
   userWithInvalidName,
   userWithInvalidPassword,
-} from './users.mock';
+} from '../shared';
 
 const configuration = new E2EConfigurations();
 
@@ -45,6 +45,28 @@ describe('User end-to-end tests', () => {
 
       expect(statusCode).toBe(200);
       expect(body).not.toHaveProperty('data', null);
+    });
+
+    it('should log out', async () => {
+      const user = await request(app.getHttpServer())
+        .post('/users')
+        .send(mockUser);
+
+      const session = await request(app.getHttpServer())
+        .post('/auth/digest')
+        .send({
+          email: mockUser.email,
+          password: mockUser.password,
+        });
+
+      const token = session.body.data;
+
+      const { body, statusCode } = await request(app.getHttpServer()).post(
+        `/auth/logout/${user.body.data.id}`,
+      );
+
+      expect(statusCode).toBe(200);
+      expect(body).toHaveProperty('message', 'Log out successfully');
     });
   });
 
