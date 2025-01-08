@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  postgres:
+    container_name: task-command-db
+    image: postgres:13-alpine
+    restart: always
+    env_file:
+      - ${ENV_FILE}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgAdmin
+    restart: always
+    env_file:
+      - ${ENV_FILE}
+    ports:
+      - 8080:80
+    volumes:
+      - /var/lib/pgadmin
+    depends_on:
+      - postgres
+volumes:
+  postgres_data:
