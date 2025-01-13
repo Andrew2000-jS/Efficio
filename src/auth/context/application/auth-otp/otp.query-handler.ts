@@ -7,6 +7,6 @@ export class OtpQueryHandler implements IQueryHandler<OtpQuery> {
   constructor(private readonly authOtp: AuthOtp) {}
 
   async execute(query: OtpQuery): Promise<any> {
-    await this.authOtp.run(query.otp, query.email);
+    return await this.authOtp.run(query.otp, query.email);
   }
 }

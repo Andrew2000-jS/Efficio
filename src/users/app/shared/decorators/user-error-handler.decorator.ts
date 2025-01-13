@@ -35,10 +35,11 @@ export function UserErrorHanlder() {
         const errorHanlder = errorTypes.some(
           (errorType) => error instanceof errorType,
         );
-        if (errorHanlder) throw new BadRequestException(error.message);
 
         if (error instanceof UserNotFoundException)
           throw new NotFoundException('User not found');
+
+        if (errorHanlder) throw new BadRequestException(error.message);
 
         throw new InternalServerErrorException(error.message);
       }

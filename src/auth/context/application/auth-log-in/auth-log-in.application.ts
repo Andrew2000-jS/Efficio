@@ -1,7 +1,6 @@
 import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import {
   AuthNotFoundException,
-  AuthNotValidException,
   AuthUnauthorized,
   AuthRepository,
 } from '../../domain';
@@ -12,10 +11,14 @@ import {
   LogInContext,
 } from './strategy';
 import { Injectable } from '@shared/utils';
+import { SendEmail } from '@shared/modules';
 
 @Injectable()
 export class AuthLogIn {
-  constructor(private readonly repository: AuthRepository) {}
+  constructor(
+    private readonly repository: AuthRepository,
+    private readonly sendEmail: SendEmail,
+  ) {}
 
   async run(
     email: string,
@@ -28,16 +31,13 @@ export class AuthLogIn {
       const loginCtx = new LogInContext();
 
       if (foundUser.length < 1) {
-        return {
-          message: 'Invalid login credentials.',
-          statusCode: 400,
-          data: null,
-        };
+        throw new AuthUnauthorized();
       }
 
       if (ctx === 'digest') loginCtx.setStrategy(new DigestStrategy(password));
 
-      if (ctx === 'email') loginCtx.setStrategy(new EmailStrategy());
+      if (ctx === 'email')
+        loginCtx.setStrategy(new EmailStrategy(this.sendEmail));
 
       const res = await loginCtx.execute(foundUser[0]);
 
@@ -50,7 +50,6 @@ export class AuthLogIn {
       errorHanlder(error, [
         AuthNotFoundException,
         AuthUnauthorized,
-        AuthNotValidException,
         InvalidContextException,
       ]);
     }

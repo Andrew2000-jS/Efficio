@@ -1,4 +1,4 @@
-import { Injectable } from '@shared/utils';
+import { generateOTP, Injectable } from '@shared/utils';
 import { AuthRepository } from '../../domain/auth.repository';
 import { ApiResponse, Criteria, errorHanlder } from '@shared/context';
 import { AuthNotFoundException } from '../../domain/exceptions';
@@ -11,12 +11,13 @@ export class AuthRecover {
     private readonly sendEmail: SendEmail,
   ) {}
 
-  async run(email: string): Promise<ApiResponse<null>> {
+  async run(email: string): Promise<ApiResponse<string>> {
     try {
-      const criteria = new Criteria({ email });
+      const criteria = new Criteria({ user: { email } });
       const foundAuth = await this.repository.match(criteria);
 
-      if (foundAuth.length < 0) throw new AuthNotFoundException();
+      if (foundAuth.length < 1) throw new AuthNotFoundException();
+
       const otp = generateOTP(4);
       await this.repository.update(foundAuth[0].user.id, { otpCode: otp });
       await this.sendEmail.run(
@@ -36,7 +37,7 @@ export class AuthRecover {
         message:
           'The verification code has been sent to your email. Please check your inbox.',
         statusCode: 200,
-        data: null,
+        data: otp,
       };
     } catch (error) {
       errorHanlder(error, [AuthNotFoundException]);

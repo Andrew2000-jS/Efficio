@@ -1,6 +1,6 @@
 export class AuthUnauthorized extends Error {
   constructor() {
-    super('Unauthorized auth');
+    super('Incorrect email or password!');
     this.message = AuthUnauthorized.name;
   }
 }

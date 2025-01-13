@@ -1,11 +1,7 @@
 import { ApiResponse } from '@shared/context';
 import { IDigestStrategy } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
-import {
-  AuthPrimitives,
-  AuthNotValidException,
-  AuthUnauthorized,
-} from '@auth/context/domain';
+import { AuthPrimitives, AuthUnauthorized } from '@auth/context/domain';
 import { compare } from '@shared/utils';
 
 export class DigestStrategy implements IDigestStrategy {
@@ -20,7 +16,7 @@ export class DigestStrategy implements IDigestStrategy {
       const isMatchPwd = compare(this.password, auth.user.password);
 
       if (!isMatchPwd) {
-        throw new AuthNotValidException();
+        throw new AuthUnauthorized();
       }
 
       const payload = {
@@ -28,6 +24,7 @@ export class DigestStrategy implements IDigestStrategy {
         email: auth.user.email,
         userId: auth.user.id,
       };
+
       const token = this.jwtService.sign(payload);
 
       return {

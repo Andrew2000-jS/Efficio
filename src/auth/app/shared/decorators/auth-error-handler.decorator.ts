@@ -2,17 +2,18 @@ import {
   BadRequestException,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   AuthNotFoundException,
-  AuthNotValidException,
   AuthUnauthorized,
+  AutOtpNotValidException,
 } from '@auth/context/domain';
 
 const errorTypes = [
   AuthNotFoundException,
   AuthUnauthorized,
-  AuthNotValidException,
+  AutOtpNotValidException,
 ];
 
 export function AuthErrorHanlder() {
@@ -29,10 +30,14 @@ export function AuthErrorHanlder() {
         const errorHanlder = errorTypes.some(
           (errorType) => error instanceof errorType,
         );
-        if (errorHanlder) throw new BadRequestException(error.message);
 
         if (error instanceof AuthNotFoundException)
           throw new NotFoundException('Auth not found');
+
+        if (error instanceof AuthUnauthorized)
+          throw new UnauthorizedException('Incorrect email or password!');
+
+        if (errorHanlder) throw new BadRequestException(error.message);
 
         throw new InternalServerErrorException(error.message);
       }

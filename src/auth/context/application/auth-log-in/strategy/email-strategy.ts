@@ -6,12 +6,12 @@ import {
 } from '@auth/context/domain';
 import { IEmailStrategy } from './interfaces';
 import { SendEmail } from '@shared/modules';
+import { generateOTP } from '@shared/utils';
 
 export class EmailStrategy implements IEmailStrategy {
-  private readonly sendEmail: SendEmail;
-  private readonly repository: AuthRepository;
+  constructor(private readonly sendEmail: SendEmail) {}
 
-  async execute(auth: AuthPrimitives): Promise<ApiResponse<null>> {
+  async execute(auth: AuthPrimitives): Promise<ApiResponse<string>> {
     try {
       const otp = generateOTP();
       await this.sendEmail.run(
@@ -27,12 +27,11 @@ export class EmailStrategy implements IEmailStrategy {
       Best regards,`,
       );
 
-      await this.repository.update(auth.id, { otpCode: otp });
       return {
         message:
           'The verification code has been sent to your email. Please check your inbox.',
         statusCode: 200,
-        data: null,
+        data: otp,
       };
     } catch (error) {
       throw new AuthUnauthorized();
