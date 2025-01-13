@@ -13,7 +13,7 @@ export class AuthUpdater {
       const criteria = new Criteria({ user: { id } });
       const foundAuth = await this.repository.match(criteria);
 
-      if (foundAuth.length < 0) throw new AuthNotFoundException();
+      if (foundAuth.length < 1) throw new AuthNotFoundException();
 
       await this.repository.update(id, updatedData);
     } catch (error) {

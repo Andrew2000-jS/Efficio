@@ -27,6 +27,7 @@ import {
   DigestLoginCtr,
   EmailLoginCtr,
   LogOutCtr,
+  OtpCtr,
   RecoverCtr,
 } from '@auth/app/controllers';
 
@@ -55,6 +56,6 @@ import {
       useClass: PostgresAuthRepository,
     },
   ],
-  controllers: [EmailLoginCtr, DigestLoginCtr, LogOutCtr, RecoverCtr],
+  controllers: [EmailLoginCtr, DigestLoginCtr, LogOutCtr, RecoverCtr, OtpCtr],
 })
 export class AuthModule {}

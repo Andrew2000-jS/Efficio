@@ -1,5 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { AUTH_APP_CONSTANTS } from '../../shared';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { AUTH_APP_CONSTANTS, AuthErrorHanlder } from '../../shared';
 import { RecoverAuthQueryHandler } from '@auth/context/application';
 import { RecoverDto } from './recover.dto';
 
@@ -10,6 +10,8 @@ export class RecoverCtr {
   ) {}
 
   @Post('recover')
+  @HttpCode(HttpStatus.OK)
+  @AuthErrorHanlder()
   async run(@Body() body: RecoverDto) {
     return await this.recoverAuthQueryHandler.execute(body);
   }

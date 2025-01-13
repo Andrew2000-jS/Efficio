@@ -47,7 +47,7 @@ describe('User end-to-end tests', () => {
   });
 
   describe('Failure Cases', () => {
-    it("shouldn't delete a user if token is invalid", async () => {
+    it('should cannot delete a user if token is invalid', async () => {
       const { body, statusCode } = await request(app.getHttpServer())
         .delete(`/users/${userId}`)
         .set('Authorization', `Bearer null`);
@@ -56,13 +56,13 @@ describe('User end-to-end tests', () => {
       expect(statusCode).toBe(401);
     });
 
-    it("shouldn't delete a user if this doesn't exist", async () => {
+    it("should cannot delete a user if this doesn't exist", async () => {
       const { body, statusCode } = await request(app.getHttpServer())
         .delete(`/users/non-id`)
         .set('Authorization', `Bearer ${token}`);
 
-      expect(body).toHaveProperty('message', 'User not found!');
-      expect(statusCode).toBe(400);
+      expect(body).toHaveProperty('message', 'User not found');
+      expect(statusCode).toBe(404);
     });
   });
 
