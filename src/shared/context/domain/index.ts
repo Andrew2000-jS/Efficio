@@ -19,6 +19,7 @@ export * from './events/interfaces/user-deleted.event';
 export * from './events/interfaces/user-updated.event';
 export * from './exceptions/error-handler';
 export * from './value-objects/created-at.value-object';
+export * from './value-objects/enum.value-object';
 export * from './value-objects/updated-at.value-object';
 export * from './value-objects/uuid.value-object';
 export * from './value-objects/value-object';
